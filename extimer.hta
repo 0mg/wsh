@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=9" />
+<hta:application id="hta"
+  applicationname="ExecTimer"
+  border="thick"
+  borderstyle="normal"
+  caption="yes"
+  contextmenu="no"
+  icon=""
+  innerborder="yes"
+  maximizebutton="no"
+  minimizebutton="yes"
+  navigable="no"
+  scroll="no"
+  scrollflat="no"
+  selection="yes"
+  showintaskbar="yes"
+  singleinstance="no"
+  sysmenu="yes"
+  version="1.0"
+  windowstate="normal"
+/>
+<style>
+body {
+  margin: 0;
+  padding: 1em;
+  background: Menu;
+  color: MenuText;
+  word-wrap: break-word;
+  font: 12px/1.3 "MS UI Gothic";
+}
+#clock {
+  font-size: large;
+  font-weight: bold;
+}
+#cmdshow {
+  margin: 1ex 0 0;
+  padding: 1ex;
+  border: 1px white inset;
+}
+</style>
+<title>ExecTimer</title>
+<dl>
+<dt>次のコマンドを実行します:
+<dd id="cmdshow">?
+</dl>
+<p>残り時間: <time id="clock">?</time></p>
+<p id="control"><button id="cancelbtn">キャンセル</button></p>
+<script>
+var args = hta.commandLine.match(/(^"[^"]+") ?(\d*) ?([\S\s]*)/);
+
+if (!args[3]) {
+  alert("usage: " + args[1] + " timeout(msec) command");
+  window.close();
+}
+
+var custom = {
+  timeout: args[2],
+  cmd: args[3],
+  clockWait: 200
+};
+
+var execCmd = function(cmd) {
+  new ActiveXObject("WScript.Shell").exec(cmd);
+  setTimeout(function() {
+    window.close();
+  }, 100);
+};
+
+var clockText = document.querySelector("#clock").firstChild;
+var cancelbtn = document.querySelector("#cancelbtn");
+var cmdshow = document.querySelector("#cmdshow").firstChild;
+
+var formatTime = function(msec) {
+  var date = new Date(0, 0, 0, 0, 0, 0, msec);
+  var hr = msec / (3600 * 1000) | 0;
+  var min = date.getMinutes();
+  var sec = date.getSeconds();
+  return (
+    (hr > 0 ? hr + " 時間 " : "") +
+    (min > 0 ? min + " 分 " : "") +
+    (sec + " 秒")
+  );
+};
+
+var startTimer = function() {
+  var timeInit = Date.now();
+  var timerId = setInterval(function() {
+    var timerest = custom.timeout - (Date.now() - timeInit);
+    if (timerest <= 0) {
+      clearInterval(timerId);
+      execCmd(custom.cmd);
+      timerest = 0;
+    }
+    clockText.nodeValue = formatTime(timerest);
+  }, custom.clockWait);
+  clockText.nodeValue = formatTime(custom.timeout);
+};
+
+cmdshow.nodeValue = custom.cmd;
+window.resizeTo(320, 31 + document.body.offsetHeight);
+cancelbtn.addEventListener("click", function() {
+  window.close();
+});
+addEventListener("keyup", function(e) {
+  if (e.key === "Enter" || e.key === "Esc") {
+    cancelbtn.click();
+  }
+});
+cancelbtn.focus();
+
+startTimer();
+</script>
