@@ -16,8 +16,8 @@ if "%2"=="" for /f "tokens=2 delims=<>" %%a in (%1) do (
   REM コンパイルオプション
   set copt=
   if %win%==1 set copt=-mwindows
-  set src=%~dp1%~nx1
-  set srb=%~dp1%~n1
+  set src=%~dpnx1
+  set srb=%~dpn1
 
 :main
   REM コンパイル前処理
