@@ -27,6 +27,7 @@ if "%2"=="" for /f "tokens=2 delims=<>" %%a in (%1) do (
 
 :rccompile
   REM リソースファイル付きコンパイル実行
+  if exist %srb%.o del %srb%.o
   windres %srb%.rc %srb%.o
   gcc %copt% %src% %srb%.o -o %srb%.exe -s -Wall
   goto run
