@@ -1,1 +1,1 @@
-@cscript //Nologo %~dp0gccrunw.js %*
+@cscript //Nologo %~dp0gccdow.js %*
