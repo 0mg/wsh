@@ -35,7 +35,7 @@ if "%2"=="" for /f "tokens=2 delims=<>" %%a in (%1) do (
 
 :compile
   REM 通常コンパイル実行
-  gcc %copt% %src% %rcopt% -o %srb%.exe -s -Wall -DUNICODE
+  gcc %copt% %src% %rcopt% -o %srb%.exe -s -Wall
   goto run
 
 :run
