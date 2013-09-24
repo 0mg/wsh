@@ -22,25 +22,25 @@ if "%2"=="" for /f "tokens=2 delims=<>" %%a in (%1) do (
 :main
   REM コンパイル前処理
   set rcopt=
-  if exist %srb%.exe del %srb%.exe
-  if exist %srb%.rc goto rccompile
+  if exist "%srb%.exe" del "%srb%.exe"
+  if exist "%srb%.rc" goto rccompile
   goto compile
 
 :rccompile
   REM リソースファイル付きコンパイル実行
-  if exist %srb%.o del %srb%.o
-  windres %srb%.rc %srb%.o -c 65001
-  set rcopt=%srb%.o
+  if exist "%srb%.o" del "%srb%.o"
+  windres "%srb%.rc" "%srb%.o" -c 65001
+  set rcopt="%srb%.o"
   goto compile
 
 :compile
   REM 通常コンパイル実行
-  gcc %copt% %src% %rcopt% -o %srb%.exe -s -Wall
+  gcc %copt% "%src%" %rcopt% -o "%srb%.exe" -s -Wall -std=gnu99
   goto run
 
 :run
   REM 出力プログラム実行
-  if %win%==1 (start %srb%.exe) else %srb%.exe
+  if %win%==1 (start "" "%srb%.exe") else "%srb%.exe"
   goto end
 
 :argerr
