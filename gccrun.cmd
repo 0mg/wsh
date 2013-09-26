@@ -16,6 +16,8 @@ if "%2"=="" for /f "tokens=2 delims=<>" %%a in (%1) do (
   REM コンパイルオプション
   set copt=
   if %win%==1 set copt=-mwindows
+  set cpplib=
+  if "%~x1"==".cpp" set cpplib=-lstdc++
   set src=%~dpnx1
   set srb=%~dpn1
 
@@ -35,7 +37,7 @@ if "%2"=="" for /f "tokens=2 delims=<>" %%a in (%1) do (
 
 :compile
   REM 通常コンパイル実行
-  gcc %copt% "%src%" %rcopt% -o "%srb%.exe" -s -Wall -std=gnu99
+  gcc %copt% "%src%" %rcopt% -o "%srb%.exe" -s -Wall %cpplib% -lole32 -lpowrprof
   goto run
 
 :run
