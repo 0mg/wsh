@@ -48,7 +48,7 @@ body {
 <p>残り時間: <time id="clock">?</time></p>
 <p id="control"><button id="cancelbtn">キャンセル</button></p>
 <script>
-var args = hta.commandLine.match(/(^"[^"]+") ?(\d*) ?([\S\s]*)/);
+var args = hta.commandLine.match(/(^"[^"]+") *(\d*) *([\S\s]*)/);
 
 if (!args[3]) {
   alert("usage: " + args[1] + " timeout(msec) command");
